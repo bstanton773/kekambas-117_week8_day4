@@ -8,10 +8,15 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Canvas: () => (/* reexport safe */ _Canvas__WEBPACK_IMPORTED_MODULE_0__["default"]),
-/* harmony export */   Component: () => (/* reexport safe */ _Component__WEBPACK_IMPORTED_MODULE_1__["default"])
+/* harmony export */   CircleContainer: () => (/* reexport safe */ _containers__WEBPACK_IMPORTED_MODULE_2__.CircleContainer),
+/* harmony export */   Component: () => (/* reexport safe */ _Component__WEBPACK_IMPORTED_MODULE_1__["default"]),
+/* harmony export */   LeftLeaningContainer: () => (/* reexport safe */ _containers__WEBPACK_IMPORTED_MODULE_2__.LeftLeaningContainer),
+/* harmony export */   RightLeaningContainer: () => (/* reexport safe */ _containers__WEBPACK_IMPORTED_MODULE_2__.RightLeaningContainer)
 /* harmony export */ });
 /* harmony import */ var _Canvas__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 /* harmony import */ var _Component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
+/* harmony import */ var _containers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(5);
+
 
 
 
@@ -484,11 +489,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Widget__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 
 const canvas = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Canvas(document.body);
-// console.log(canvas);
 const myWidget = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Component();
-console.log(myWidget);
 canvas.addWidget(myWidget);
-console.log(canvas);
+const rightWidget = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Component();
+rightWidget.shape = new _Widget__WEBPACK_IMPORTED_MODULE_0__.RightLeaningContainer();
+rightWidget.locationLeft = 6;
+rightWidget.locationTop = 6;
+rightWidget.shape.zIndex = 99;
+canvas.addWidget(rightWidget);
+const circleWidget = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Component();
+circleWidget.shape = new _Widget__WEBPACK_IMPORTED_MODULE_0__.CircleContainer();
+circleWidget.locationTop = 5;
+circleWidget.locationLeft = 5;
+circleWidget.width = 4;
+circleWidget.height = 4;
+canvas.addWidget(circleWidget);
 
 })();
 
