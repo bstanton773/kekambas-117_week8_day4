@@ -1,2 +1,5 @@
-console.log('Hello World');
-console.log('Brian hello world');
+import { Canvas } from './Widget';
+
+
+const canvas = new Canvas(document.body);
+console.log(canvas);
