@@ -14,8 +14,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   RightLeaningContainer: () => (/* reexport safe */ _containers__WEBPACK_IMPORTED_MODULE_2__.RightLeaningContainer)
 /* harmony export */ });
 /* harmony import */ var _Canvas__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _Component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
-/* harmony import */ var _containers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(5);
+/* harmony import */ var _Component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
+/* harmony import */ var _containers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
 
 
 
@@ -31,8 +31,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ Canvas)
 /* harmony export */ });
 class Canvas {
-    constructor(parent) {
+    constructor(parent, _state = {}) {
         this.parent = parent;
+        this._state = _state;
         this._widgets = [];
         this.parent.innerHTML = '';
         this.parent.id = "canvas";
@@ -46,6 +47,13 @@ class Canvas {
             aspectRatio: "1 / 1"
         };
         Object.assign(this.parent.style, newStyle);
+    }
+    get state() {
+        return this._state;
+    }
+    set state(value) {
+        this._state = Object.assign(Object.assign({}, this._state), value);
+        this.rerender();
     }
     get widgets() {
         return this._widgets;
@@ -61,10 +69,19 @@ class Canvas {
             this.buildWidget(widget);
         }
     }
+    rerender() {
+        for (const widget of this.widgets) {
+            let div = document.getElementById(widget.id);
+            if (this.injectContent(widget, div)) {
+                this.buildWidget(widget);
+            }
+        }
+    }
     buildWidget(widget) {
         const div = this.initializeDiv(widget);
         this.buildContainer(widget, div);
         this.placeContainer(widget, div);
+        this.injectContent(widget, div);
         this.parent.append(div);
     }
     initializeDiv(widget) {
@@ -97,6 +114,18 @@ class Canvas {
         };
         Object.assign(div.style, newStyle);
     }
+    injectContent(widget, div) {
+        let changeState = false;
+        let key;
+        div.innerHTML = widget.content;
+        for (key in this.state) {
+            if (div.innerHTML.includes(`{{ ${key} }}`)) {
+                div.innerHTML = div.innerHTML.split(`{{ ${key} }}`).join(this.state[key]);
+                changeState = true;
+            }
+        }
+        return changeState;
+    }
 }
 
 
@@ -106,76 +135,10 @@ class Canvas {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Container)
-/* harmony export */ });
-class Container {
-    constructor(_backgroundColor = 'white', _borderColor = 'black', _borderRadius = '0px', _borderWidth = '1px', _borderStyle = 'solid', _zIndex = 0) {
-        this._backgroundColor = _backgroundColor;
-        this._borderColor = _borderColor;
-        this._borderRadius = _borderRadius;
-        this._borderWidth = _borderWidth;
-        this._borderStyle = _borderStyle;
-        this._zIndex = _zIndex;
-    }
-    get attributes() {
-        return {
-            backgroundColor: this.backgroundColor,
-            borderColor: this.borderColor,
-            borderRadius: this.borderRadius,
-            borderWidth: this.borderWidth,
-            borderStyle: this.borderStyle,
-            zIndex: this.zIndex
-        };
-    }
-    get backgroundColor() {
-        return this._backgroundColor;
-    }
-    set backgroundColor(value) {
-        this._backgroundColor = value;
-    }
-    get borderColor() {
-        return this._borderColor;
-    }
-    set borderColor(value) {
-        this._borderColor = value;
-    }
-    get borderRadius() {
-        return this._borderRadius;
-    }
-    set borderRadius(value) {
-        this._borderRadius = value;
-    }
-    get borderWidth() {
-        return this._borderWidth;
-    }
-    set borderWidth(value) {
-        this._borderWidth = value;
-    }
-    get borderStyle() {
-        return this._borderStyle;
-    }
-    set borderStyle(value) {
-        this._borderStyle = value;
-    }
-    get zIndex() {
-        return this._zIndex;
-    }
-    set zIndex(value) {
-        this._zIndex = value;
-    }
-}
-
-
-/***/ }),
-/* 4 */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Component)
 /* harmony export */ });
 /* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
-/* harmony import */ var _containers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
+/* harmony import */ var _containers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
 
 
 class Component {
@@ -241,7 +204,7 @@ class Component {
 
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -250,7 +213,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   LeftLeaningContainer: () => (/* binding */ LeftLeaningContainer),
 /* harmony export */   RightLeaningContainer: () => (/* binding */ RightLeaningContainer)
 /* harmony export */ });
-/* harmony import */ var _Container__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+/* harmony import */ var _Container__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
 
 class LeftLeaningContainer extends _Container__WEBPACK_IMPORTED_MODULE_0__["default"] {
     constructor() {
@@ -271,6 +234,72 @@ class CircleContainer extends _Container__WEBPACK_IMPORTED_MODULE_0__["default"]
     }
 }
 
+
+
+/***/ }),
+/* 5 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Container)
+/* harmony export */ });
+class Container {
+    constructor(_backgroundColor = 'white', _borderColor = 'black', _borderRadius = '0px', _borderWidth = '1px', _borderStyle = 'solid', _zIndex = 0) {
+        this._backgroundColor = _backgroundColor;
+        this._borderColor = _borderColor;
+        this._borderRadius = _borderRadius;
+        this._borderWidth = _borderWidth;
+        this._borderStyle = _borderStyle;
+        this._zIndex = _zIndex;
+    }
+    get attributes() {
+        return {
+            backgroundColor: this.backgroundColor,
+            borderColor: this.borderColor,
+            borderRadius: this.borderRadius,
+            borderWidth: this.borderWidth,
+            borderStyle: this.borderStyle,
+            zIndex: this.zIndex
+        };
+    }
+    get backgroundColor() {
+        return this._backgroundColor;
+    }
+    set backgroundColor(value) {
+        this._backgroundColor = value;
+    }
+    get borderColor() {
+        return this._borderColor;
+    }
+    set borderColor(value) {
+        this._borderColor = value;
+    }
+    get borderRadius() {
+        return this._borderRadius;
+    }
+    set borderRadius(value) {
+        this._borderRadius = value;
+    }
+    get borderWidth() {
+        return this._borderWidth;
+    }
+    set borderWidth(value) {
+        this._borderWidth = value;
+    }
+    get borderStyle() {
+        return this._borderStyle;
+    }
+    set borderStyle(value) {
+        this._borderStyle = value;
+    }
+    get zIndex() {
+        return this._zIndex;
+    }
+    set zIndex(value) {
+        this._zIndex = value;
+    }
+}
 
 
 /***/ }),
@@ -489,6 +518,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Widget__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 
 const canvas = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Canvas(document.body);
+canvas.state = { className: 'Kekambas', firstName: 'Kevin' };
 const myWidget = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Component();
 canvas.addWidget(myWidget);
 const rightWidget = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Component();
@@ -496,14 +526,17 @@ rightWidget.shape = new _Widget__WEBPACK_IMPORTED_MODULE_0__.RightLeaningContain
 rightWidget.locationLeft = 6;
 rightWidget.locationTop = 6;
 rightWidget.shape.zIndex = 99;
+rightWidget.content = '<h1>My name is {{ firstName }}</h1>';
 canvas.addWidget(rightWidget);
 const circleWidget = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Component();
 circleWidget.shape = new _Widget__WEBPACK_IMPORTED_MODULE_0__.CircleContainer();
-circleWidget.locationTop = 5;
+circleWidget.locationTop = 1;
 circleWidget.locationLeft = 5;
 circleWidget.width = 4;
 circleWidget.height = 4;
+circleWidget.content = '<h4>Hello {{ className }}</h4>';
 canvas.addWidget(circleWidget);
+canvas.state = { firstName: 'Brian' };
 
 })();
 

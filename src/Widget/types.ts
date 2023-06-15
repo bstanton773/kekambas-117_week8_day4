@@ -10,3 +10,7 @@ export interface Containerable {
     borderStyle:string,
     zIndex:number
 }
+
+export interface State {
+    [key:string]:any
+}
