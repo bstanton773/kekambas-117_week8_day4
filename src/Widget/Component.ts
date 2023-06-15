@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { GridUnit } from './types';
 import Canvas from './Canvas';
+import Container from './Container';
+import { LeftLeaningContainer } from './containers';
 
 export default class Component {
 
@@ -11,9 +13,16 @@ export default class Component {
         private _locationTop: GridUnit = 1,
         private _locationLeft: GridUnit = 1,
         private _content: string = "<div></div>",
-        private _canvas?: Canvas | undefined
+        private _shape: Container = new LeftLeaningContainer(),
+        private _canvas?: Canvas | undefined,
     ){}
 
+    public get shape(): Container {
+        return this._shape;
+    }
+    public set shape(value: Container) {
+        this._shape = value;
+    }
     public get canvas(): Canvas | undefined {
         return this._canvas;
     }
