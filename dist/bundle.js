@@ -28,6 +28,7 @@ __webpack_require__.r(__webpack_exports__);
 class Canvas {
     constructor(parent) {
         this.parent = parent;
+        this._widgets = [];
         this.parent.innerHTML = '';
         this.parent.id = "canvas";
         const newStyle = {
@@ -40,6 +41,56 @@ class Canvas {
             aspectRatio: "1 / 1"
         };
         Object.assign(this.parent.style, newStyle);
+    }
+    get widgets() {
+        return this._widgets;
+    }
+    addWidget(widget) {
+        this.widgets.push(widget);
+        widget.canvas = this;
+        this.render();
+    }
+    render() {
+        this.parent.innerHTML = '';
+        for (const widget of this.widgets) {
+            this.buildWidget(widget);
+        }
+    }
+    buildWidget(widget) {
+        const div = this.initializeDiv(widget);
+        this.buildContainer(widget, div);
+        this.placeContainer(widget, div);
+        this.parent.append(div);
+    }
+    initializeDiv(widget) {
+        const div = document.createElement('div');
+        div.id = widget.id;
+        const newStyle = {
+            margin: "auto",
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            alignContent: "center",
+            padding: "3%",
+            aspectRatio: "1 / 1"
+        };
+        Object.assign(div.style, newStyle);
+        return div;
+    }
+    buildContainer(widget, div) {
+        Object.assign(div.style, widget.shape.attributes);
+    }
+    placeContainer(widget, div) {
+        const newStyle = {
+            gridColumnStart: widget.locationLeft.toString(),
+            gridColumnEnd: "span " + widget.width,
+            gridRowStart: widget.locationTop.toString(),
+            gridRowEnd: "span " + widget.height
+        };
+        Object.assign(div.style, newStyle);
     }
 }
 
@@ -433,9 +484,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Widget__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 
 const canvas = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Canvas(document.body);
-console.log(canvas);
+// console.log(canvas);
 const myWidget = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Component();
 console.log(myWidget);
+canvas.addWidget(myWidget);
+console.log(canvas);
 
 })();
 
