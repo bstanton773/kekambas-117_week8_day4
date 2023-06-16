@@ -1,4 +1,4 @@
-import { Canvas, CircleContainer, Component, RightLeaningContainer } from './Widget';
+import { Canvas, CircleContainer, Component, RightLeaningContainer, WidgetClick } from './Widget';
 
 
 const canvas = new Canvas(document.body);
@@ -22,6 +22,12 @@ circleWidget.locationLeft = 5;
 circleWidget.width = 4;
 circleWidget.height = 4;
 circleWidget.content = '<h4>Hello {{ className }}</h4>'
+new WidgetClick(circleWidget, (_, widget:Component):void => {
+    console.log(widget);
+    widget.canvas?.render()
+})
 canvas.addWidget(circleWidget);
+
+
 
 canvas.state = {firstName: 'Brian'};

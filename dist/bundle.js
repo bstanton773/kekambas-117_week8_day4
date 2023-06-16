@@ -11,11 +11,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   CircleContainer: () => (/* reexport safe */ _containers__WEBPACK_IMPORTED_MODULE_2__.CircleContainer),
 /* harmony export */   Component: () => (/* reexport safe */ _Component__WEBPACK_IMPORTED_MODULE_1__["default"]),
 /* harmony export */   LeftLeaningContainer: () => (/* reexport safe */ _containers__WEBPACK_IMPORTED_MODULE_2__.LeftLeaningContainer),
-/* harmony export */   RightLeaningContainer: () => (/* reexport safe */ _containers__WEBPACK_IMPORTED_MODULE_2__.RightLeaningContainer)
+/* harmony export */   RightLeaningContainer: () => (/* reexport safe */ _containers__WEBPACK_IMPORTED_MODULE_2__.RightLeaningContainer),
+/* harmony export */   WidgetClick: () => (/* reexport safe */ _clicks__WEBPACK_IMPORTED_MODULE_3__.WidgetClick)
 /* harmony export */ });
 /* harmony import */ var _Canvas__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 /* harmony import */ var _Component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 /* harmony import */ var _containers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
+/* harmony import */ var _clicks__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(12);
+
 
 
 
@@ -78,11 +81,13 @@ class Canvas {
         }
     }
     buildWidget(widget) {
+        var _a;
         const div = this.initializeDiv(widget);
         this.buildContainer(widget, div);
         this.placeContainer(widget, div);
         this.injectContent(widget, div);
         this.parent.append(div);
+        (_a = widget.click) === null || _a === void 0 ? void 0 : _a.setClick();
     }
     initializeDiv(widget) {
         const div = document.createElement('div');
@@ -142,7 +147,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class Component {
-    constructor(_id = (0,uuid__WEBPACK_IMPORTED_MODULE_1__["default"])(), _width = 2, _height = 2, _locationTop = 1, _locationLeft = 1, _content = "<div></div>", _shape = new _containers__WEBPACK_IMPORTED_MODULE_0__.LeftLeaningContainer(), _canvas) {
+    constructor(_id = (0,uuid__WEBPACK_IMPORTED_MODULE_1__["default"])(), _width = 2, _height = 2, _locationTop = 1, _locationLeft = 1, _content = "<div></div>", _shape = new _containers__WEBPACK_IMPORTED_MODULE_0__.LeftLeaningContainer(), _canvas, _click) {
         this._id = _id;
         this._width = _width;
         this._height = _height;
@@ -151,6 +156,13 @@ class Component {
         this._content = _content;
         this._shape = _shape;
         this._canvas = _canvas;
+        this._click = _click;
+    }
+    get click() {
+        return this._click;
+    }
+    set click(value) {
+        this._click = value;
     }
     get shape() {
         return this._shape;
@@ -454,6 +466,57 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i);
 
+/***/ }),
+/* 12 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   WidgetClick: () => (/* binding */ WidgetClick)
+/* harmony export */ });
+/* harmony import */ var _Click__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
+
+class WidgetClick extends _Click__WEBPACK_IMPORTED_MODULE_0__["default"] {
+    constructor(widget, _callback) {
+        super(widget);
+        this._callback = _callback;
+    }
+    setClick() {
+        const div = document.getElementById(this.widget.id);
+        if (div !== null) {
+            console.log(div);
+            div.addEventListener('click', (e) => {
+                console.log('Hello');
+                this._callback(e, this.widget);
+            });
+        }
+    }
+}
+
+
+
+/***/ }),
+/* 13 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Click)
+/* harmony export */ });
+class Click {
+    constructor(_widget) {
+        this._widget = _widget;
+        this._widget.click = this;
+    }
+    get widget() {
+        return this._widget;
+    }
+    setClick() {
+        throw new Error('Method not implemented');
+    }
+}
+
+
 /***/ })
 /******/ 	]);
 /************************************************************************/
@@ -535,6 +598,11 @@ circleWidget.locationLeft = 5;
 circleWidget.width = 4;
 circleWidget.height = 4;
 circleWidget.content = '<h4>Hello {{ className }}</h4>';
+new _Widget__WEBPACK_IMPORTED_MODULE_0__.WidgetClick(circleWidget, (_, widget) => {
+    var _a;
+    console.log(widget);
+    (_a = widget.canvas) === null || _a === void 0 ? void 0 : _a.render();
+});
 canvas.addWidget(circleWidget);
 canvas.state = { firstName: 'Brian' };
 

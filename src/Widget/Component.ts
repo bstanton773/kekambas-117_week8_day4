@@ -3,6 +3,7 @@ import { GridUnit } from './types';
 import Canvas from './Canvas';
 import Container from './Container';
 import { LeftLeaningContainer } from './containers';
+import Click from './Click';
 
 export default class Component {
 
@@ -15,8 +16,15 @@ export default class Component {
         private _content: string = "<div></div>",
         private _shape: Container = new LeftLeaningContainer(),
         private _canvas?: Canvas | undefined,
+        private _click?: Click | undefined,
     ){}
 
+    public get click(): Click | undefined {
+        return this._click;
+    }
+    public set click(value: Click | undefined) {
+        this._click = value;
+    }
     public get shape(): Container {
         return this._shape;
     }

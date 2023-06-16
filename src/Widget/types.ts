@@ -14,3 +14,7 @@ export interface Containerable {
 export interface State {
     [key:string]:any
 }
+
+export interface Clickable{
+    setClick():void
+}

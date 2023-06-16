@@ -39,7 +39,7 @@ export default class Canvas{
         this.render()
     }
 
-    private render():void{
+    public render():void{
         this.parent.innerHTML = '';
         for (const widget of this.widgets){
             this.buildWidget(widget);
@@ -61,6 +61,7 @@ export default class Canvas{
         this.placeContainer(widget, div);
         this.injectContent(widget, div);
         this.parent.append(div);
+        widget.click?.setClick();
     }
 
     private initializeDiv(widget:Component):HTMLDivElement{
